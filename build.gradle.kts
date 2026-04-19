@@ -28,6 +28,13 @@ dependencies {
 
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
+    implementation("org.flywaydb:flyway-core") {
+        version {
+            strictly("10.21.0")
+        }
+    }
+    implementation("org.flywaydb:flyway-database-postgresql:10.21.0")
+
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

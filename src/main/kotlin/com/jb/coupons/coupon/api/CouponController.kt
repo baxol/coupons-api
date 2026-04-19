@@ -20,6 +20,7 @@ class CouponController(
         @RequestBody createCouponRequest: CreateCouponRequest
     ): CreateCouponResponse =
         createCouponService.create(createCouponRequest)
+            .toDto()
 
     @PostMapping("redeem")
     fun redeem(

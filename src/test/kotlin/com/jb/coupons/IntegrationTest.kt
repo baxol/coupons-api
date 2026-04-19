@@ -20,7 +20,7 @@ import java.time.Clock
 @Import(TestClockConfig::class)
 @TestClassOrder(ClassOrderer.OrderAnnotation::class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class IntegrationTest {
+class IntegrationTest : TestcontainersTest() {
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
