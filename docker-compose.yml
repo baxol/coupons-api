@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  coupons_backend_postgres:
+    container_name: coupons_backend_postgres
+    image: postgres:16.1
+    shm_size: 1g
+    environment:
+      - POSTGRES_DB=backend_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
