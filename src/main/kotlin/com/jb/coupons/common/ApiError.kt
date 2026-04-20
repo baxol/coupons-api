@@ -37,7 +37,9 @@ enum class ErrorType {
 
 enum class ErrorMessage {
     INTERNAL_SERVER_ERROR,
+
     COUPON_ALREADY_EXISTS,
+    COUPON_NOT_ALLOWED,
     COUPON_NOT_FOUND,
     COUPON_LIMIT_REACHED,
     COUPON_ALREADY_USED
@@ -50,3 +52,10 @@ open class ApiException(
     val errorMessage: ErrorMessage,
     val detail: Any? = null
 ) : RuntimeException(errorMessage.toString())
+
+class DataCouponNotFoundException() :
+    ApiException(
+        HttpStatus.NOT_FOUND,
+        ErrorType.INCONSISTENT_DATA,
+        ErrorMessage.COUPON_NOT_FOUND
+    )

@@ -24,6 +24,7 @@ extra["testcontainersVersion"] = "1.18.0"
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.postgresql:postgresql")
 
     testImplementation("org.testcontainers:junit-jupiter")

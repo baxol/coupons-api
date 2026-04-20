@@ -1,7 +1,13 @@
 package com.jb.coupons.coupon.infrastructure
 
 import com.jb.coupons.coupon.domain.Coupon
+import com.jb.coupons.coupon.domain.CouponAlreadyExistsException
+import com.jb.coupons.coupon.domain.CouponCode
 import com.jb.coupons.coupon.domain.CouponRepository
+import com.jb.coupons.coupon.infrastructure.jdbc.JdbcCouponRepository
+import com.jb.coupons.coupon.infrastructure.jdbc.toDomain
+import com.jb.coupons.coupon.infrastructure.jdbc.toEntity
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -9,18 +15,25 @@ class CouponRepositoryImpl(
     private val jdbcCouponRepository: JdbcCouponRepository
 ) : CouponRepository {
 
-    override fun save(coupon: Coupon): Coupon {
+    override fun incrementUsageIfAvailable(code: CouponCode): Boolean =
+        jdbcCouponRepository.increaseUsageIfAvailable(code.value)
 
-        val entity = coupon.toEntity()
-        val saved = jdbcCouponRepository.save(entity)
+    override fun save(coupon: Coupon): Coupon =
+        coupon.toEntity()
+            .let {
+                try {
+                    jdbcCouponRepository.save(it)
+                } catch (e: DuplicateKeyException) {
+                    throw CouponAlreadyExistsException()
+                }
+            }
+            .toDomain()
 
-        return Coupon(
-            saved.code,
-            coupon.createdAt,
-            coupon.maxUsages,
-            coupon.actualUsage,
-            coupon.country
-        )
-    }
+    override fun findByCodeIgnoreCase(code: CouponCode): Coupon? =
+        jdbcCouponRepository.findByCode(code.value)
+            ?.toDomain()
+
+    override fun existsByCodeIgnoreCase(code: CouponCode): Boolean =
+        jdbcCouponRepository.existsByCode(code.value)
 
 }

@@ -14,6 +14,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import kotlin.test.assertContains
+import kotlin.test.assertEquals
 
 class CouponFlowIntegrationTest : IntegrationTest() {
 
@@ -32,6 +33,25 @@ class CouponFlowIntegrationTest : IntegrationTest() {
             HttpStatus.CONFLICT,
             ApiError(HttpStatus.CONFLICT, ErrorType.INCONSISTENT_DATA, ErrorMessage.COUPON_ALREADY_EXISTS)
         )
+
+        runBlocking {
+            val result = listOf(
+                async {
+                    simplePostResultStatus(
+                        "/coupons/create",
+                        CreateCouponRequest("couponTWO", 2, "DE")
+                    )
+                },
+                async {
+                    simplePostResultStatus(
+                        "/coupons/create",
+                        CreateCouponRequest("couponTwo", 2, "DE")
+                    )
+                }
+            ).awaitAll()
+            assertContains(result, HttpStatus.CREATED.value())
+            assertContains(result, HttpStatus.CONFLICT.value())
+        }
     }
 
     @Test
@@ -47,28 +67,26 @@ class CouponFlowIntegrationTest : IntegrationTest() {
             "/coupons/redeem",
             RedeemCouponRequest("user1", "coupon1"),
             HttpStatus.OK,
-            RedeemCouponResponse(true)
+            RedeemCouponResponse("coupon1")
         )
 
         runBlocking {
-            listOf(
+            val result = listOf(
                 async {
-                    simplePost(
+                    simplePostResultStatus(
                         "/coupons/redeem",
                         RedeemCouponRequest("user2", "coupon1"),
-                        HttpStatus.OK,
-                        RedeemCouponResponse(true)
                     )
                 },
                 async {
-                    simplePost(
+                    simplePostResultStatus(
                         "/coupons/redeem",
                         RedeemCouponRequest("user3", "coupon1"),
-                        HttpStatus.OK,
-                        RedeemCouponResponse(true)
                     )
                 }
             ).awaitAll()
+            assertEquals(result.toSet().size, 1)
+            assertEquals(result.first(), HttpStatus.OK.value())
         }
 
         runBlocking {
@@ -86,8 +104,8 @@ class CouponFlowIntegrationTest : IntegrationTest() {
                     )
                 }
             ).awaitAll()
-            assertContains(result, 200)
-            assertContains(result, 409)
+            assertContains(result, HttpStatus.OK.value())
+            assertContains(result, HttpStatus.CONFLICT.value())
         }
 
 
@@ -112,7 +130,7 @@ class CouponFlowIntegrationTest : IntegrationTest() {
             "/coupons/redeem",
             RedeemCouponRequest("user1", "coupon2"),
             HttpStatus.OK,
-            RedeemCouponResponse(true)
+            RedeemCouponResponse("coupon2")
         )
 
         simplePost(

@@ -1,17 +1,14 @@
 package com.jb.coupons.coupon.api
 
-import com.jb.coupons.coupon.application.CreateCouponService
+import com.jb.coupons.coupon.application.CouponApplicationService
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("coupons")
 class CouponController(
-    private val createCouponService: CreateCouponService
+    private val couponApplicationService: CouponApplicationService
 ) {
 
     @PostMapping("create")
@@ -19,14 +16,13 @@ class CouponController(
     fun create(
         @RequestBody createCouponRequest: CreateCouponRequest
     ): CreateCouponResponse =
-        createCouponService.create(createCouponRequest)
-            .toDto()
+        couponApplicationService.create(createCouponRequest)
 
     @PostMapping("redeem")
     fun redeem(
-        @RequestBody redeemCouponRequest: RedeemCouponRequest
-    ): RedeemCouponResponse {
-        TODO()
-    }
+        @RequestBody redeemCouponRequest: RedeemCouponRequest,
+        httpRequest: HttpServletRequest
+    ): RedeemCouponResponse =
+        couponApplicationService.redeem(redeemCouponRequest, httpRequest.remoteAddr)
 
 }
