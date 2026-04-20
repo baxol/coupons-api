@@ -6,13 +6,13 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class CouponRepositoryImpl(
-    private val couponEntityRepository: CouponEntityRepository
+    private val jdbcCouponRepository: JdbcCouponRepository
 ) : CouponRepository {
 
     override fun save(coupon: Coupon): Coupon {
 
         val entity = coupon.toEntity()
-        val saved = couponEntityRepository.save(entity)
+        val saved = jdbcCouponRepository.save(entity)
 
         return Coupon(
             saved.code,
