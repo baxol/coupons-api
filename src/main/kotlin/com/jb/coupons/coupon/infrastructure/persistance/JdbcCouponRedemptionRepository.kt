@@ -1,4 +1,4 @@
-package com.jb.coupons.coupon.infrastructure.jdbc
+package com.jb.coupons.coupon.infrastructure.persistance
 
 import org.springframework.data.repository.CrudRepository
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -22,19 +22,17 @@ class JdbcCouponRedemptionRepositoryCustomImpl(
     override fun existsByUserIdAndCouponCode(userId: String, code: String): Boolean =
         jdbc.queryForObject(
             """
-        SELECT EXISTS (
-            SELECT 1
+            SELECT count (*)
             FROM coupon_redemption_entity
             JOIN coupon_entity ON coupon_entity.id = coupon_redemption_entity.coupon_id
             WHERE coupon_redemption_entity.user_ref = CAST(:userId as text)
               AND coupon_entity.code = CAST(:code AS citext)
-        )
     """.trimIndent(),
             mapOf(
                 "userId" to userId,
                 "code" to code
             ),
-            Boolean::class.java
-        ) ?: false
+            Int::class.java
+        )!! > 0
 
 }

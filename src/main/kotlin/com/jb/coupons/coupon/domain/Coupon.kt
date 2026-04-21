@@ -2,7 +2,8 @@ package com.jb.coupons.coupon.domain
 
 import java.time.Instant
 
-class CouponCode private constructor(
+@JvmInline
+value class CouponCode private constructor(
     val value: String,
 ) {
     companion object {
@@ -10,7 +11,7 @@ class CouponCode private constructor(
             val clean = code.trim()
 
             require(clean.isNotBlank()) {
-                "Can not create blank code"
+                "Code can not be blank"
             }
 
             return CouponCode(clean)
@@ -23,22 +24,23 @@ class Coupon(
     val createdAt: Instant,
     val maxUsages: Int,
     val actualUsage: Int,
-    val country: String
+    val country: Country
 ) {
 
     companion object {
         fun create(code: String, createdAt: Instant, maxUsages: Int, country: String): Coupon {
+            require(maxUsages > 0) { "Max usage must be > 0" }
             return Coupon(
                 CouponCode.create(code),
                 createdAt,
                 maxUsages,
                 0,
-                country
+                Country.create(country)
             )
         }
     }
 
-    fun canBeUsed(userCountry: String): Result<Unit> =
+    fun canBeUsed(userCountry: Country): Result<Unit> =
         when {
             country != userCountry ->
                 Result.failure(CouponError.InvalidCountry())
@@ -48,5 +50,5 @@ class Coupon(
 }
 
 sealed class CouponError : Throwable() {
-    class InvalidCountry: CouponError()
+    class InvalidCountry : CouponError()
 }

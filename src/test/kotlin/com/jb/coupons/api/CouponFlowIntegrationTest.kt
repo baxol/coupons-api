@@ -113,12 +113,12 @@ class CouponFlowIntegrationTest : IntegrationTest() {
             "/coupons/redeem",
             RedeemCouponRequest("user6", "coupon1"),
             HttpStatus.CONFLICT,
-            ApiError(HttpStatus.CONFLICT,  ErrorType.INCONSISTENT_DATA, ErrorMessage.COUPON_LIMIT_REACHED)
+            ApiError(HttpStatus.CONFLICT, ErrorType.INCONSISTENT_DATA, ErrorMessage.COUPON_LIMIT_REACHED)
         )
     }
 
     @Test
-    fun `should create coupon and return conflict when used twice`() {
+    fun `should return conflict when coupon is redeemed twice by the same user`() {
         simplePost(
             "/coupons/create",
             CreateCouponRequest("coupon2", 4, "PL"),
@@ -141,6 +141,27 @@ class CouponFlowIntegrationTest : IntegrationTest() {
                 HttpStatus.CONFLICT,
                 ErrorType.INCONSISTENT_DATA,
                 ErrorMessage.COUPON_ALREADY_USED
+            )
+        )
+    }
+
+    @Test
+    fun `should return forbidden when coupon is redeemed by user from different country`() {
+        simplePost(
+            "/coupons/create",
+            CreateCouponRequest("coupon22", 4, "DE"),
+            HttpStatus.CREATED,
+            CreateCouponResponse("coupon22", clock.instant(), 4, "DE")
+        )
+
+        simplePost(
+            "/coupons/redeem",
+            RedeemCouponRequest("user1", "coupon22"),
+            HttpStatus.FORBIDDEN,
+            ApiError(
+                HttpStatus.FORBIDDEN,
+                ErrorType.INCONSISTENT_DATA,
+                ErrorMessage.COUPON_NOT_ALLOWED
             )
         )
     }

@@ -15,7 +15,7 @@ class CouponApplicationService(
     }
 
     fun redeem(request: RedeemCouponRequest, ipAddress: String): RedeemCouponResponse {
-        val country = countryResolver.resolve(ipAddress)
+        val country = countryResolver.resolveCountry(ipAddress)
         return couponService.redeem(request, country)
             .toDto()
     }

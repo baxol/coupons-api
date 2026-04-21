@@ -31,12 +31,15 @@ enum class ErrorType {
     BAD_REQUEST,
     RESOURCE_NOT_FOUND,
 
-    INCONSISTENT_DATA,
+    EXTERNAL_SERVICE_ERROR,
 
+    INCONSISTENT_DATA
 }
 
 enum class ErrorMessage {
     INTERNAL_SERVER_ERROR,
+
+    SERVICE_UNAVAILABLE,
 
     COUPON_ALREADY_EXISTS,
     COUPON_NOT_ALLOWED,
@@ -58,4 +61,12 @@ class DataCouponNotFoundException() :
         HttpStatus.NOT_FOUND,
         ErrorType.INCONSISTENT_DATA,
         ErrorMessage.COUPON_NOT_FOUND
+    )
+
+class CountryResolutionException(details: String) :
+    ApiException(
+        HttpStatus.SERVICE_UNAVAILABLE,
+        ErrorType.EXTERNAL_SERVICE_ERROR,
+        ErrorMessage.SERVICE_UNAVAILABLE,
+        details
     )

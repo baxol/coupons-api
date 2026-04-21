@@ -3,6 +3,7 @@ package com.jb.coupons.coupon.api
 import com.jb.coupons.coupon.application.CouponApplicationService
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,13 +15,15 @@ class CouponController(
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
-        @RequestBody createCouponRequest: CreateCouponRequest
+        @RequestBody
+        @Validated createCouponRequest: CreateCouponRequest
     ): CreateCouponResponse =
         couponApplicationService.create(createCouponRequest)
 
     @PostMapping("redeem")
     fun redeem(
-        @RequestBody redeemCouponRequest: RedeemCouponRequest,
+        @RequestBody
+        @Validated redeemCouponRequest: RedeemCouponRequest,
         httpRequest: HttpServletRequest
     ): RedeemCouponResponse =
         couponApplicationService.redeem(redeemCouponRequest, httpRequest.remoteAddr)

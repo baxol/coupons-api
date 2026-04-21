@@ -6,3 +6,7 @@ spring:
     driverClassName: org.postgresql.Driver
     username: postgres
     password: postgres
+
+app:
+  external:
+    country-api-url: https://api.country.is

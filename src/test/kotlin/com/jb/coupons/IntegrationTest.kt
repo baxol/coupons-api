@@ -13,7 +13,7 @@ import java.time.Clock
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestClockConfig::class)
+@Import(TestConfiguration::class)
 class IntegrationTest : TestcontainersTest() {
 
     @Autowired
@@ -48,6 +48,5 @@ class IntegrationTest : TestcontainersTest() {
             .andReturn()
             .response
             .status
-
 
 }

@@ -27,7 +27,7 @@ data class CreateCouponResponse(
 )
 
 fun Coupon.toDto(): CreateCouponResponse =
-    CreateCouponResponse(code.value, createdAt, maxUsages, country)
+    CreateCouponResponse(code.value, createdAt, maxUsages, country.code)
 
 fun CreateCouponRequest.toDomain(createdAt: Instant): Coupon =
     Coupon.create(code, createdAt, maxUsages, country)

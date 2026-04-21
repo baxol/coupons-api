@@ -30,7 +30,7 @@ class CouponService(
         val coupon = couponRepository.findByCodeIgnoreCase(couponRedemption.code)
             ?: throw CouponNotFoundException()
 
-        coupon.canBeUsed(country)
+        coupon.canBeUsed(Country.create(country))
             .onFailure { error ->
                 when (error) {
                     is CouponError.InvalidCountry -> throw InvalidCouponCountryException()

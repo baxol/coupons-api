@@ -1,4 +1,4 @@
-package com.jb.coupons.coupon.infrastructure.jdbc
+package com.jb.coupons.coupon.infrastructure.persistance
 
 import org.postgresql.util.PGobject
 import org.springframework.context.annotation.Bean

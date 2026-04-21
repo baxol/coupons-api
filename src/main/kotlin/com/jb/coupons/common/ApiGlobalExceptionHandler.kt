@@ -30,10 +30,10 @@ class ApiGlobalExceptionHandler {
             )
 
     @ExceptionHandler(
+        IllegalArgumentException::class,
         HttpMessageNotReadableException::class,
         MethodArgumentTypeMismatchException::class,
         MissingServletRequestParameterException::class,
-        MethodArgumentNotValidException::class
     )
     fun handleBadRequest(ex: Exception): ResponseEntity<ApiError> =
         ResponseEntity
@@ -46,6 +46,27 @@ class ApiGlobalExceptionHandler {
                     ex.message,
                 )
             )
+
+    @ExceptionHandler(
+        MethodArgumentNotValidException::class
+    )
+    fun handleValidationBadRequest(ex: MethodArgumentNotValidException): ResponseEntity<ApiError> {
+        val errors = ex.bindingResult.fieldErrors
+            .map { "${it.field} - ${it.defaultMessage}" }
+            .sorted()
+            .joinToString(",")
+
+        return ResponseEntity
+            .badRequest()
+            .body(
+                ApiError(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorType.BAD_REQUEST,
+                    null,
+                    errors,
+                )
+            )
+    }
 
     @ExceptionHandler(Exception::class)
     fun handleUnexpected(ex: Exception): ResponseEntity<ApiError> {

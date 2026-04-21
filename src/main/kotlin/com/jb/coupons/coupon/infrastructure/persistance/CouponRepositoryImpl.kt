@@ -1,12 +1,9 @@
-package com.jb.coupons.coupon.infrastructure
+package com.jb.coupons.coupon.infrastructure.persistance
 
 import com.jb.coupons.coupon.domain.Coupon
 import com.jb.coupons.coupon.domain.CouponAlreadyExistsException
 import com.jb.coupons.coupon.domain.CouponCode
 import com.jb.coupons.coupon.domain.CouponRepository
-import com.jb.coupons.coupon.infrastructure.jdbc.JdbcCouponRepository
-import com.jb.coupons.coupon.infrastructure.jdbc.toDomain
-import com.jb.coupons.coupon.infrastructure.jdbc.toEntity
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
 

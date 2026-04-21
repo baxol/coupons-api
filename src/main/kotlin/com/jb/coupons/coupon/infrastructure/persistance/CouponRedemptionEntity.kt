@@ -1,4 +1,4 @@
-package com.jb.coupons.coupon.infrastructure.jdbc
+package com.jb.coupons.coupon.infrastructure.persistance
 
 import com.jb.coupons.coupon.domain.CouponRedemption
 import org.springframework.data.annotation.Id
@@ -16,7 +16,7 @@ fun CouponRedemption.toEntity(id: Int? = null, couponId: Int) =
     CouponRedemptionEntity(
         id,
         couponId,
-        userId,
+        userId.value,
         createdAt
     )
 

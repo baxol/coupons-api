@@ -1,5 +1,6 @@
-package com.jb.coupons.coupon.infrastructure.jdbc
+package com.jb.coupons.coupon.infrastructure.persistance
 
+import com.jb.coupons.coupon.domain.Country
 import com.jb.coupons.coupon.domain.Coupon
 import com.jb.coupons.coupon.domain.CouponCode
 import org.springframework.data.annotation.Id
@@ -21,7 +22,7 @@ fun Coupon.toEntity(id: Int? = null) = CouponEntity(
     createdAt,
     maxUsages,
     actualUsage,
-    country
+    country.code
 )
 
 fun CouponEntity.toDomain() = Coupon(
@@ -29,5 +30,5 @@ fun CouponEntity.toDomain() = Coupon(
     createdAt,
     maxUsages,
     actualUsage,
-    country
+    Country.create(country)
 )

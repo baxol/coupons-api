@@ -1,13 +1,10 @@
-package com.jb.coupons.coupon.infrastructure
+package com.jb.coupons.coupon.infrastructure.persistance
 
 import com.jb.coupons.common.DataCouponNotFoundException
 import com.jb.coupons.coupon.domain.CouponCode
 import com.jb.coupons.coupon.domain.CouponRedemption
 import com.jb.coupons.coupon.domain.CouponRedemptionRepository
-import com.jb.coupons.coupon.infrastructure.jdbc.JdbcCouponRedemptionRepository
-import com.jb.coupons.coupon.infrastructure.jdbc.JdbcCouponRepository
-import com.jb.coupons.coupon.infrastructure.jdbc.toDomain
-import com.jb.coupons.coupon.infrastructure.jdbc.toEntity
+import com.jb.coupons.coupon.domain.UserId
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -26,9 +23,9 @@ class CouponRedemptionRepositoryImpl(
     }
 
     override fun existsByUserIdAndCouponCode(
-        userId: String,
+        userId: UserId,
         code: CouponCode
     ): Boolean =
-        jdbcCouponRedemptionRepository.existsByUserIdAndCouponCode(userId, code.value)
+        jdbcCouponRedemptionRepository.existsByUserIdAndCouponCode(userId.value, code.value)
 
 }
